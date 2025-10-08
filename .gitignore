@@ -49,4 +49,8 @@ build/
 /service-registry/src/main/resources/application-prod.properties
 /service-registry/src/main/resources/application.yml
 /service-registry/src/main/resources/application.properties
+
+/cloud-gateway/src/main/resources/application-prod.properties
+/cloud-gateway/src/main/resources/application.yml
+/cloud-gateway/src/main/resources/application.properties
 .env
