@@ -1,6 +1,12 @@
 spring:
   application:
     name: SERVICE-REGISTRY
+  config:
+    import: optional:configserver:http://localhost:9296
+#  cloud:
+#    config:
+#      enabled: true
+#      uri: http://localhost:9296
 
 server:
   port: 8761
