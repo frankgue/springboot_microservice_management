@@ -53,4 +53,8 @@ build/
 /cloud-gateway/src/main/resources/application-prod.properties
 /cloud-gateway/src/main/resources/application.yml
 /cloud-gateway/src/main/resources/application.properties
+
+/hystrix-dashboard/src/main/resources/application-prod.properties
+/hystrix-dashboard/src/main/resources/application.yml
+/hystrix-dashboard/src/main/resources/application.properties
 .env
