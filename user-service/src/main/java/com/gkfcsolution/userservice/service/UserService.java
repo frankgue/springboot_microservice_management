@@ -36,7 +36,7 @@ public class UserService {
         log.info("Inside getUserWithDepartment of UserService");
         User user = userRepository.findByUserId(userId);
         Department department = restTemplate
-                .getForObject("http://localhost:9091/departments/" + user.getDepartmentId(), Department.class);
+                .getForObject("http://DEPARTMENT-SERVICE/departments/" + user.getDepartmentId(), Department.class);
         ResponseDto responseDto =ResponseDto.builder()
                 .department(department)
                 .user(user)
