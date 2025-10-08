@@ -41,7 +41,12 @@ build/
 /department-service/src/main/resources/application-prod.properties
 /department-service/src/main/resources/application.yml
 /department-service/src/main/resources/application.properties
+
 /user-service/src/main/resources/application-prod.properties
 /user-service/src/main/resources/application.yml
 /user-service/src/main/resources/application.properties
+
+/service-registry/src/main/resources/application-prod.properties
+/service-registry/src/main/resources/application.yml
+/service-registry/src/main/resources/application.properties
 .env
