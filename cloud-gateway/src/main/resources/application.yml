@@ -1,56 +1,52 @@
 spring:
   application:
     name: API-GATEWAY
-  #  cloud:
-  #    config:
-  #      enabled: true
-  #      uri: http://localhost:9296
   config:
     import: optional:configserver:http://localhost:9296
+
   cloud:
-#    config:
-#      enabled: true
-#      uri: http://localhost:9296
     gateway:
-      server:
-        webmvc:
-          routes:
-            - id: USER-SERVICE
-              uri: lb://USER-SERVICE
-              predicates:
-                - Path=/users/**
-              filters:
-                - name: CircuitBreaker
-                  args:
-                    name: USER-SERVICE
-                    fallbackUri: forward:/userServiceFallBack
-            - id: DEPARTMENT-SERVICE
-              uri: lb://DEPARTMENT-SERVICE
-              predicates:
-                - Path=/departments/**
-              filters:
-                - name: CircuitBreaker
-                  args:
-                    name: DEPARTMENT-SERVICE
-                    fallbackUri: forward:/departmentServiceFallBack
+      mvc:    # ✅ au lieu de server.webmvc
+        routes:
+          - id: USER-SERVICE
+            uri: lb://USER-SERVICE
+            predicates:
+              - Path=/users/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  id: userServiceCircuit   # ✅ identique au bloc resilience4j
+                  fallbackUri: forward:/userServiceFallBack
+
+          - id: DEPARTMENT-SERVICE
+            uri: lb://DEPARTMENT-SERVICE
+            predicates:
+              - Path=/departments/**
+            filters:
+              - name: CircuitBreaker
+                args:
+                  id: departmentServiceCircuit   # ✅ identique au bloc resilience4j
+                  fallbackUri: forward:/departmentServiceFallBack
 
 resilience4j:
   circuitbreaker:
     instances:
-      userServiceCircuitBreaker:
+      userServiceCircuit:     # ✅ même nom que dans args.id
         slidingWindowSize: 10
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
+
+      departmentServiceCircuit:  # ✅ idem
+        slidingWindowSize: 10
+        failureRateThreshold: 50
+        waitDurationInOpenState: 10s
+
   timelimiter:
     instances:
-      userServiceCircuitBreaker:
+      userServiceCircuit:
+        timeoutDuration: 4s
+      departmentServiceCircuit:
         timeoutDuration: 4s
 
-
-#management:
-#  endpoints:
-#    web:
-#      exposure:
-#        include: hystrix.stream
 server:
   port: 9191
