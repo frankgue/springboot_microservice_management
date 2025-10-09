@@ -3,49 +3,47 @@ spring:
     name: API-GATEWAY
   config:
     import: optional:configserver:http://localhost:9296
-
   cloud:
     gateway:
-      mvc:    # ✅ au lieu de server.webmvc
-        routes:
-          - id: USER-SERVICE
-            uri: lb://USER-SERVICE
-            predicates:
-              - Path=/users/**
-            filters:
-              - name: CircuitBreaker
-                args:
-                  id: userServiceCircuit   # ✅ identique au bloc resilience4j
-                  fallbackUri: forward:/userServiceFallBack
+      server:
+        webmvc:
+          routes:
+            - id: USER-SERVICE
+              uri: lb://USER-SERVICE
+              predicates:
+                - Path=/users/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    id: userServiceCircuit
+                    fallbackUri: forward:/userServiceFallBack
 
-          - id: DEPARTMENT-SERVICE
-            uri: lb://DEPARTMENT-SERVICE
-            predicates:
-              - Path=/departments/**
-            filters:
-              - name: CircuitBreaker
-                args:
-                  id: departmentServiceCircuit   # ✅ identique au bloc resilience4j
-                  fallbackUri: forward:/departmentServiceFallBack
+            - id: DEPARTMENT-SERVICE
+              uri: lb://DEPARTMENT-SERVICE
+              predicates:
+                - Path=/departments/**
+              filters:
+                - name: CircuitBreaker
+                  args:
+                    id: departmentServiceCircuit
+                    fallbackUri: forward:/departmentServiceFallBack
 
 resilience4j:
   circuitbreaker:
     instances:
-      userServiceCircuit:     # ✅ même nom que dans args.id
+      userServiceCircuitBreaker:
         slidingWindowSize: 10
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
-
-      departmentServiceCircuit:  # ✅ idem
+      departmentServiceCircuitBreaker:
         slidingWindowSize: 10
         failureRateThreshold: 50
         waitDurationInOpenState: 10s
-
   timelimiter:
     instances:
-      userServiceCircuit:
+      userServiceCircuitBreaker:
         timeoutDuration: 4s
-      departmentServiceCircuit:
+      departmentServiceCircuitBreaker:
         timeoutDuration: 4s
 
 server:
